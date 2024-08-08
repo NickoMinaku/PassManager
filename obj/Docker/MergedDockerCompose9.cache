@@ -1,0 +1,64 @@
+name: dockercompose6167200836218762251
+services:
+  reactapp2.client:
+    build:
+      context: C:\Users\NickoMinaku\Desktop\test\ReactApp2
+      dockerfile: /reactapp2.client/Dockerfile
+    image: client
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 5173
+        published: "5173"
+        protocol: tcp
+  reactapp2.server:
+    build:
+      context: C:\Users\NickoMinaku\Desktop\test\ReactApp2
+      dockerfile: ./dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ASPNETCORE_HTTPS_PORTS: "8081"
+      ASPNETCORE_Kestrel__Certificates__Default__Password: "123"
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/server.pfx
+    image: server
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 8080
+        published: "8080"
+        protocol: tcp
+      - mode: ingress
+        target: 8081
+        published: "8081"
+        protocol: tcp
+      - mode: ingress
+        target: 8080
+        protocol: tcp
+      - mode: ingress
+        target: 8081
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: C:\Users\NickoMinaku\.aspnet\https
+        target: /https
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\NickoMinaku\AppData\Roaming/Microsoft/UserSecrets
+        target: /home/app/.microsoft/usersecrets
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\NickoMinaku\AppData\Roaming/ASP.NET/Https
+        target: /home/app/.aspnet/https
+        read_only: true
+        bind:
+          create_host_path: true
+networks:
+  default:
+    name: dockercompose6167200836218762251_default
